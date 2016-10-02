@@ -44,16 +44,16 @@ export class Angular2TokenService implements CanActivate {
     ) { }
 
     canActivate() {
-        if (this._currentUserData)
+        if (this.loggedIn())
             return true;
         else {
 
             // Redirect user to sign in if signInRedirect is set
             if(this._options.signInRedirect)
                 this._router.navigate([this._options.signInRedirect]);
-            
+
             return false;
-        }         
+        }
     }
 
     // Inital configuration
@@ -84,7 +84,7 @@ export class Angular2TokenService implements CanActivate {
             }
         };
 
-        this._options = Object.assign(defaultOptions, options);
+        this._options = (<any>Object).assign(defaultOptions, options);
 
         this._tryLoadAuthData();
     }
@@ -294,6 +294,14 @@ export class Angular2TokenService implements CanActivate {
         this._handleResponse(response);
 
         return response;
+    }
+
+    loggedIn() {
+      if (this._currentAuthData || this._currentUserData) {
+        return true
+      } else {
+        return false
+      }
     }
 
     // Check if response is complete and newer, then update storage
